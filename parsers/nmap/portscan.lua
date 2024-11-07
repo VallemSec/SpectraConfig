@@ -1,7 +1,7 @@
-function(input) 
+function(input)
 
     local lunajson = require("lunajson")
-    local decoded_input = lunajson.decode(input)
+    local decoded_input = lunajson.decode(input)[1]
 
     local output = {}
     for ip, protocols in pairs(decoded_input) do
