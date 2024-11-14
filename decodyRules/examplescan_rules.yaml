@@ -1,0 +1,11 @@
+# There is no detailed explanation since we can just put the error from the tool in the report for nerds
+name: examplescan
+
+rules:
+    # Name of the rule (handy for logging)
+  - name: "Example scan"
+    # The condition under which the description/explanation needs to be added to the report
+    condition: short == "examplescan"
+    # The explanation of the error
+    explanation: "We found that your webserver returns content"
+    category: "server"
