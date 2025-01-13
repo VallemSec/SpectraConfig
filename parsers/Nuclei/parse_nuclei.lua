@@ -1,19 +1,15 @@
-local lunajson = require("lunajson")
+function(input)
+    local lunajson = require("lunajson")
+    local stdout_lines = lunajson.decode(input)
+    local parsed_output = {}
 
-function parse_nuclei_output(input)
-    local output = {
-        scanner_name = "Nuclei",
-        results = {}
-
-    }
-
-    -- Process each JSONL line
-    for line in input:gmatch("[^\r\n]+") do
+    -- Process each input string
+    for i, line in pairs(stdout_lines) do
         -- Attempt to decode JSON, skip invalid lines
         local status, decoded_input = pcall(lunajson.decode, line)
         if not status then
             -- Skip the line and optionally print a warning
-            print("Warning: Skipping invalid JSON line")
+            report_warning("Skipping invalid JSON line")
         else
             -- Extract fields with fallbacks
             local host = decoded_input.host or decoded_input.ip or "N/A"
@@ -21,31 +17,23 @@ function parse_nuclei_output(input)
             local protocol = decoded_input.scheme or "N/A"
             local name = decoded_input.info and decoded_input.info.name or "Unknown"
             local severity = decoded_input.info and decoded_input.info.severity or "info"
-            local extracted = decoded_input["extracted-results"] and table.concat(decoded_input["extracted-results"], ">
+            local extracted = decoded_input["extracted-results"] and table.concat(decoded_input["extracted-results"], ", ")
+            local matcher = decoded_input["matcher-name"]
 
             -- Create the short description (sanitize name to avoid special characters)
-               local long = string.format(
-                "Host: %s, Port: %s, Protocol: %s, Name: %s, Extracted: %s",
-                host, port, protocol, name, extracted
+            local long = string.format(
+                "Host: %s, Port: %s, Protocol: %s, Name: %s, Extracted: %s, Severity: %s, Matcher: %s",
+                host, port, protocol, name, extracted, severity, matcher
             )
+            local short = name
 
             -- Prepare results
-            local pass_results = {host}
-            table.insert(output.results, {
+            table.insert(parsed_output, {
                 short = short,
-                long = long,
-                pass_results = pass_results
+                long = long
             })
         end
     end
 
-    return output
+    return parsed_output
 end
-
--- Read input from stdin
-local input = io.stdin:read("*all")
-local results = parse_nuclei_output(input)
-
--- Output results as JSON
-local output_str = lunajson.encode(results)
-print(output_str)     

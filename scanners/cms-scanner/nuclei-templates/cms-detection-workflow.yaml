@@ -1,0 +1,27 @@
+id: cms_detection_workflow
+info:
+  name: CMS Detection and Vulnerability Scanning Workflow
+  author: Bob Elsendoorn
+
+workflows:
+  - tags: info
+  # CMS detection workflow
+  - template: /custom/cms-detector.yaml
+    matchers:
+      - name: WordPress Detection
+        subtemplates:
+          # - tags: cves,wordpress
+          - template: /custom/cms-detector.yaml
+          - template: http/technologies/tech-detect.yaml
+          - template: http/vulnerabilities/wordpress/wordpress-db-backup.yaml
+          - template: http/vulnerabilities/wordpress/wordpress-debug-log.yaml
+          # - template: http/vulnerabilities/wordpress/wordpress-directory-listing.yaml
+          # - template: http/vulnerabilities/wordpress/wordpress-user-enum.yaml
+          - template: http/vulnerabilities/wordpress/wp-user-enum.yaml
+          # - template: helpers/wordlists/wordpress-plugins.yaml # Appears to not be a valid file
+          - template: http/vulnerabilities/wordpress/zero-spam-sql-injection.yaml
+          - template: http/vulnerabilities/wordpress/wp-yoast-user-enumeration.yaml
+          # - template: http/vulnerabilities/wordpress/wordpress-rdf-user-enum.yaml
+          # - template: http/fuzzing/wordpress-themes-detect.yaml
+          # - template: http/fuzzing/wordpress-plugins-detect.yaml
+          - template: http/misconfiguration/missing-sri.yaml
