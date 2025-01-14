@@ -1,0 +1,52 @@
+id: cms-detect
+
+info:
+  name: CMS Detection (WordPress, Joomla, Drupal)
+  author: Bob Elsendoorn
+  severity: info
+  tags: cms, detection
+
+requests:
+  - method: GET
+    path:
+      - "{{BaseURL}}/"
+    redirects: true
+
+    matchers-condition: or
+    matchers:
+
+      # WordPress Detection
+      - type: word
+        words:
+          - "wp-content"
+          - "wp-includes"
+          - "WordPress"
+          - "wp-page"
+        part: body
+        name: WordPress Detection
+
+      # Joomla Detection
+      - type: regex
+        regex:
+          - "(?i)Joomla!.*?(Open Source CMS)"
+          - "/components/com_"
+          - "/modules/mod_"
+        part: body
+        name: Joomla Detection
+
+      # Drupal Detection
+      - type: regex
+        regex:
+          - "/sites/all/"
+          - "/misc/drupal.js"
+          - "Drupal.settings"
+        part: body
+        name: Drupal Detection
+
+      # Common CMS Version Headers
+      - type: regex
+        regex:
+          - "X-Powered-By:.*?(WordPress|Joomla|Drupal)/?([0-9.]*)?"
+          - "Generator:.*?(WordPress|Joomla|Drupal) ([0-9.]*)?"
+        part: header
+        name: CMS Version Headers
