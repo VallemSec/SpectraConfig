@@ -10,7 +10,7 @@ workflows:
     matchers:
       - name: WordPress Detection
         subtemplates:
-          # - tags: cves,wordpress
+          - tags: cves2025,cves2024,cves2023
           - template: /custom/cms-detector.yaml
           - template: http/technologies/tech-detect.yaml
           - template: http/vulnerabilities/wordpress/wordpress-db-backup.yaml
