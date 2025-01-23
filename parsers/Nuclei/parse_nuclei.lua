@@ -35,5 +35,5 @@ function(input)
         end
     end
 
-    return parsed_output
+    return lunajson.encode(parsed_output)
 end
