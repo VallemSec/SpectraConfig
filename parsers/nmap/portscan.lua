@@ -12,5 +12,5 @@ function(input)
         end
     end
 
-    return output
+    return lunajson.encode(output)
 end

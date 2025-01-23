@@ -7,5 +7,5 @@ function(input)
         table.insert(parsed_output, {short=line, long="", pass_results={line}})
     end
 
-    return parsed_output
+    return lunajson.encode(parsed_output)
 end
